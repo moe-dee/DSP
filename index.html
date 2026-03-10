@@ -52,12 +52,19 @@
         .active-tab-glow {
             box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.2);
         }
+
+        /* Modal Animation */
+        .modal-enter { animation: modalFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.92) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-amber-500/30">
 
     <!-- Navigation Header -->
-    <header class="fixed top-0 w-full z-50 bg-[#1A1D23]/95 backdrop-blur-md border-b border-white/5 py-5 flex justify-between items-center px-6 md:px-12 no-print">
+    <header class="fixed top-0 w-full z-50 bg-[#1A1D23]/95 backdrop-blur-md border-b border-white/5 py-5 flex justify-between items-center px-6 md:px-12 no-print text-left">
         <div class="flex flex-col text-left">
             <h1 class="text-lg md:text-xl font-bold tracking-tight text-white leading-none">DUBAI SAFARI PARK</h1>
             <p class="text-[10px] text-amber-500 font-bold uppercase tracking-[0.4em] mt-1.5 italic">Strategic Creator Calendar</p>
@@ -74,23 +81,95 @@
         <div id="dashboard-root"></div>
     </main>
 
+    <!-- Modal Container -->
+    <div id="modal-root" class="fixed inset-0 z-[100] hidden no-print">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeModal()"></div>
+        <div id="modal-content" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-xl p-4">
+            <!-- Content injected here -->
+        </div>
+    </div>
+
     <script>
+        // Data updated: OCT/NOV/DEC -> 2026 | FEB/MAR/APR/MAY -> 2027
         const rawData = [
-            { id: 'OCT', month: 'OCTOBER 2025', title: 'Opening Campaign / Wild Rules', influencer: 'Diana & Roma · Ghaith & Sara · AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Opening Campaign (14 Oct Launch)', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: '1st Midterm SH (13-14)', influencer: '' }, { level: 'Tier 3', activity: 'Diwali (20)', influencer: '' }], color: 'from-purple-700/40 to-indigo-900/50', accent: 'border-purple-400/20', status: 'Grand Launch' },
-            { id: 'NOV', month: 'NOVEMBER 2025', title: 'Wild Rules & Eid Al Etihad', influencer: 'Ghaith & Sara · AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Opening Campaign Continued', influencer: 'Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: 'Eid Al Etihad (29 Nov-2 Dec)', influencer: 'Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 3', activity: 'Oman National Day (20-21)', influencer: '' }], color: 'from-blue-700/40 to-sky-900/50', accent: 'border-blue-400/20', status: 'Active' },
-            { id: 'DEC', month: 'DECEMBER 2025', title: 'Festive Village & Winter Break', influencer: 'Diana & Roma · Ghaith & Sara · AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Festive Village', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: 'Winter Break SH (8 Dec-4 Jan)', influencer: '' }], color: 'from-rose-700/40 to-red-900/50', accent: 'border-rose-400/20', status: 'Festive' },
-            { id: 'FEB', month: 'FEBRUARY 2026', title: 'Conservation & Midterm', influencer: 'Ghaith & Sara', tiers: [{ level: 'Tier 2', activity: '2nd Midterm SH (9-11)', influencer: '' }, { level: 'Tier 3', activity: 'Valentine\'s Day (14)', influencer: 'Ghaith & Sara' }], color: 'from-amber-600/40 to-orange-800/50', accent: 'border-amber-400/20', status: 'Educational' },
-            { id: 'MAR', month: 'MARCH 2026', title: 'Wild Swap & Ramadan', influencer: 'Diana & Roma · Ghaith & Sara · AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'The Wild Swap: Eid Al Fitr & Springs SH', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: 'Springs SH (16-29)', influencer: '' }], color: 'from-indigo-700/40 to-slate-900/50', accent: 'border-indigo-400/20', status: 'Cultural' },
-            { id: 'APR', month: 'APRIL 2026', title: 'Kids Go Free & Easter', influencer: 'Diana & Roma · Ghaith & Sara · AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Kids Go Free Promotion', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: 'Easter Egg Hunt (4-5)', influencer: 'Diana & Roma Show' }], color: 'from-orange-700/40 to-amber-900/50', accent: 'border-orange-400/20', status: 'Spring' },
-            { id: 'MAY', month: 'MAY 2026', title: 'Eid Al Adha & Season Wrap', influencer: 'Diana & Roma · Ghaith & Sara · AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Eid Al Adha / Closing Season (27-31)', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: '3rd Midterm SH (25-26)', influencer: '' }], color: 'from-zinc-600/40 to-stone-800/50', accent: 'border-zinc-400/20', status: 'Closing' }
+            { id: 'OCT', month: 'OCTOBER 2026', title: 'Opening Campaign / Wild Rules', influencer: 'Diana & Roma <span class="mx-1 opacity-30 text-[10px]">·</span> Ghaith & Sara <span class="mx-1 opacity-30 text-[10px]">·</span> AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Opening Campaign (14 Oct Launch)', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: '1st Midterm SH (13-14)', influencer: '' }, { level: 'Tier 3', activity: 'Diwali (20)', influencer: '' }], color: 'from-purple-700/40 to-indigo-900/50', accent: 'border-purple-400/20', status: 'Grand Launch' },
+            { id: 'NOV', month: 'NOVEMBER 2026', title: 'Wild Rules & Eid Al Etihad', influencer: 'Ghaith & Sara <span class="mx-1 opacity-30 text-[10px]">·</span> AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Opening Campaign Continued', influencer: 'Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: 'Eid Al Etihad (29 Nov-2 Dec)', influencer: 'Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 3', activity: 'Oman National Day (20-21)', influencer: '' }], color: 'from-blue-700/40 to-sky-900/50', accent: 'border-blue-400/20', status: 'Active' },
+            { id: 'DEC', month: 'DECEMBER 2026', title: 'Festive Village & Winter Break', influencer: 'Diana & Roma <span class="mx-1 opacity-30 text-[10px]">·</span> Ghaith & Sara <span class="mx-1 opacity-30 text-[10px]">·</span> AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Festive Village', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: 'Winter Break SH (8 Dec-4 Jan)', influencer: '' }], color: 'from-rose-700/40 to-red-900/50', accent: 'border-rose-400/20', status: 'Festive' },
+            { id: 'FEB', month: 'FEBRUARY 2027', title: 'Conservation & Midterm', influencer: 'Ghaith & Sara', tiers: [{ level: 'Tier 2', activity: '2nd Midterm SH (9-11)', influencer: '' }, { level: 'Tier 3', activity: 'Valentine\'s Day (14)', influencer: 'Ghaith & Sara' }], color: 'from-amber-600/40 to-orange-800/50', accent: 'border-amber-400/20', status: 'Educational' },
+            { id: 'MAR', month: 'MARCH 2027', title: 'Wild Swap & Ramadan', influencer: 'Diana & Roma <span class="mx-1 opacity-30 text-[10px]">·</span> Ghaith & Sara <span class="mx-1 opacity-30 text-[10px]">·</span> AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'The Wild Swap: Eid Al Fitr & Springs SH', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: 'Springs SH (16-29)', influencer: '' }], color: 'from-indigo-700/40 to-slate-900/50', accent: 'border-indigo-400/20', status: 'Cultural' },
+            { id: 'APR', month: 'APRIL 2027', title: 'Kids Go Free & Easter', influencer: 'Diana & Roma <span class="mx-1 opacity-30 text-[10px]">·</span> Ghaith & Sara <span class="mx-1 opacity-30 text-[10px]">·</span> AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Kids Go Free Promotion', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: 'Easter Egg Hunt (4-5)', influencer: 'Diana & Roma Show' }], color: 'from-orange-700/40 to-amber-900/50', accent: 'border-orange-400/20', status: 'Spring' },
+            { id: 'MAY', month: 'MAY 2027', title: 'Eid Al Adha & Season Wrap', influencer: 'Diana & Roma <span class="mx-1 opacity-30 text-[10px]">·</span> Ghaith & Sara <span class="mx-1 opacity-30 text-[10px]">·</span> AfroBySara / The Rahals', tiers: [{ level: 'Tier 1', activity: 'Eid Al Adha / Closing Season (27-31)', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara / The Rahals' }, { level: 'Tier 2', activity: '3rd Midterm SH (25-26)', influencer: '' }], color: 'from-zinc-600/40 to-stone-800/50', accent: 'border-zinc-400/20', status: 'Closing' }
         ];
 
         let activeTab = 'OCT';
 
         function getTalentLabel(activity) {
-            if (activity.toLowerCase().includes('diwali') || activity.toLowerCase().includes('oman') || activity.toLowerCase().includes('national day') || activity.toLowerCase().includes('eid')) return 'Cultural & National Holiday';
-            if (activity.toLowerCase().includes('sh') || activity.toLowerCase().includes('break')) return 'School Holiday';
+            const lower = activity.toLowerCase();
+            if (lower.includes('diwali') || lower.includes('oman') || lower.includes('national day') || lower.includes('eid')) return 'Cultural & National Holiday';
+            if (lower.includes('sh') || lower.includes('break')) return 'School Holiday';
             return 'Talent';
+        }
+
+        function openModal() {
+            const current = rawData.find(m => m.id === activeTab);
+            const modalRoot = document.getElementById('modal-root');
+            const modalContent = document.getElementById('modal-content');
+            
+            modalContent.innerHTML = `
+                <div class="bg-[#1F232B] border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl modal-enter text-left">
+                    <div class="p-8 md:p-10 bg-gradient-to-br ${current.color} border-b border-white/5 relative">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                        <div class="flex justify-between items-start mb-6 relative z-10">
+                            <div>
+                                <h4 class="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60 mb-1.5">${current.month} Strategy</h4>
+                                <h3 class="text-3xl font-bold uppercase tracking-tight text-white leading-tight">Deliverable Specs</h3>
+                            </div>
+                            <button onclick="closeModal()" class="p-2.5 bg-black/30 hover:bg-black/50 rounded-full text-white transition-all hover:rotate-90">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-8 md:p-10 space-y-10">
+                        <div>
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="h-[1px] w-6 bg-amber-500"></div>
+                                <span class="text-[11px] font-black uppercase tracking-[0.4em] text-amber-500">Content Format</span>
+                            </div>
+                            <div class="space-y-5">
+                                <div class="flex items-center gap-5 p-6 glass-card rounded-3xl border border-white/5 hover:border-white/10 transition-all group">
+                                    <div class="bg-amber-500/10 text-amber-500 rounded-2xl p-3.5 shrink-0 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" x2="7" y1="2" y2="22"></line><line x1="17" x2="17" y1="2" y2="22"></line><line x1="2" x2="22" y1="12" y2="12"></line><line x1="2" x2="7" y1="7" y2="7"></line><line x1="2" x2="7" y1="17" y2="17"></line><line x1="17" x2="22" y1="17" y2="17"></line><line x1="17" x2="22" y1="7" y2="7"></line></svg>
+                                    </div>
+                                    <div class="text-left">
+                                        <p class="font-bold text-white uppercase tracking-wide text-base mb-1">x1 Instagram Reel</p>
+                                        <p class="text-[11px] text-white/40 leading-relaxed uppercase tracking-wider font-semibold">Per creator</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-5 p-6 glass-card rounded-3xl border border-white/5 hover:border-white/10 transition-all group">
+                                    <div class="bg-amber-500/10 text-amber-500 rounded-2xl p-3.5 shrink-0 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    </div>
+                                    <div class="text-left">
+                                        <p class="font-bold text-white uppercase tracking-wide text-base mb-1">x1 Instagram Story Set</p>
+                                        <p class="text-[11px] text-white/40 leading-relaxed uppercase tracking-wider font-semibold">Per creator · Minimum 3 frames</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="closeModal()" class="w-full bg-white/5 text-white/80 font-bold py-5 rounded-2xl uppercase text-[11px] tracking-[0.2em] hover:bg-white/10 hover:text-white transition-all border border-white/5">Close Specifications</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modalRoot.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modalRoot = document.getElementById('modal-root');
+            modalRoot.classList.add('hidden');
+            document.body.style.overflow = 'auto';
         }
 
         function render() {
@@ -99,7 +178,7 @@
             
             root.innerHTML = `
                 <!-- Navigation -->
-                <div class="flex gap-2 overflow-x-auto pb-6 mb-10 scrollbar-hide no-print">
+                <div class="flex gap-2 overflow-x-auto pb-6 mb-10 scrollbar-hide no-print text-left">
                     ${rawData.map(m => `
                         <button onclick="setActiveTab('${m.id}')" class="px-6 py-2.5 rounded-2xl text-[11px] font-bold transition-all uppercase tracking-widest ${activeTab === m.id ? 'bg-amber-500 text-[#1A1D23] active-tab-glow scale-105' : 'bg-white/5 text-slate-500 border border-white/10 hover:border-white/20'}">
                             ${m.id}
@@ -128,7 +207,7 @@
                                         <div class="flex flex-col gap-3 p-5 glass-card rounded-[1.5rem] border border-white/5 text-left">
                                             <div class="flex items-center justify-between">
                                                 <div class="px-2 py-0.5 rounded bg-white/10 text-white text-[9px] font-bold uppercase tracking-widest border border-white/10 no-print">${t.level}</div>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white/20 no-print"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white/20 no-print"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" x2="16" y2="6"/><line x1="8" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                             </div>
                                             <div class="text-left">
                                                 <p class="font-bold text-lg leading-snug uppercase tracking-tight text-white ${hasInfluencer ? 'mb-1.5' : ''}">${t.activity}</p>
@@ -154,9 +233,9 @@
                             </div>
                         </div>
                         
-                        <div class="bg-amber-500 text-[#1A1D23] rounded-[2.5rem] p-10 flex items-center justify-between shadow-2xl hover:bg-white transition-all cursor-pointer group no-print">
+                        <div onclick="openModal()" class="bg-amber-500 text-[#1A1D23] rounded-[2.5rem] p-10 flex items-center justify-between shadow-2xl hover:bg-white transition-all cursor-pointer group no-print">
                             <div class="text-left">
-                                <span class="text-[#1A1D23]/60 text-[11px] font-bold uppercase tracking-widest block mb-1">Briefing Hub</span>
+                                <span class="text-[#1A1D23]/60 text-[11px] font-bold uppercase tracking-widest block mb-1">Strategic Specs</span>
                                 <span class="text-2xl font-extrabold uppercase tracking-tighter">Deliverables</span>
                             </div>
                             <div class="bg-[#1A1D23] h-14 w-14 rounded-full flex items-center justify-center text-amber-500 shadow-lg group-hover:scale-110 transition-transform">
