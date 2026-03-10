@@ -101,7 +101,6 @@
     </div>
 
     <script>
-        // Updated Data: Simplified creator name to AfroBySara
         const rawData = [
             { id: 'OCT', month: 'OCTOBER 2026', title: 'Opening Campaign / Wild Rules', influencer: 'Diana & Roma <span class="mx-1 opacity-30 text-[10px]">·</span> Ghaith & Sara <span class="mx-1 opacity-30 text-[10px]">·</span> AfroBySara', tiers: [{ level: 'Tier 1', activity: 'Opening Campaign (14 Oct Launch)', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara' }, { level: 'Tier 2', activity: '1st Midterm SH (13-14)', influencer: '' }, { level: 'Tier 3', activity: 'Diwali (20)', influencer: '' }], color: 'from-purple-700/40 to-indigo-900/50', accent: 'border-purple-400/20', status: 'Launch' },
             { id: 'NOV', month: 'NOVEMBER 2026', title: 'Wild Rules & Eid Al Etihad', influencer: 'Ghaith & Sara <span class="mx-1 opacity-30 text-[10px]">·</span> AfroBySara', tiers: [{ level: 'Tier 1', activity: 'Opening Campaign Continued', influencer: 'Ghaith & Sara, AfroBySara' }, { level: 'Tier 2', activity: 'Eid Al Etihad (29 Nov-2 Dec)', influencer: 'Ghaith & Sara, AfroBySara' }, { level: 'Tier 3', activity: 'Oman National Day (20-21)', influencer: '' }], color: 'from-blue-700/40 to-sky-900/50', accent: 'border-blue-400/20', status: 'Heritage' },
@@ -126,6 +125,9 @@
             const modalRoot = document.getElementById('modal-root');
             const modalContent = document.getElementById('modal-content');
             
+            // Logic to determine if snapchat is required (Only for Ghaith & Sara exclusive months)
+            const isGhaithSaraOnly = current.influencer.trim() === 'Ghaith & Sara';
+
             modalContent.innerHTML = `
                 <div class="bg-[#1F232B] border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl modal-enter text-left">
                     <div class="p-8 md:p-10 bg-gradient-to-br ${current.color} border-b border-white/5 relative">
@@ -136,7 +138,7 @@
                                 <h3 class="text-3xl font-bold uppercase tracking-tight text-white leading-tight">Deliverable Specs</h3>
                             </div>
                             <button onclick="closeModal()" class="p-2.5 bg-black/30 hover:bg-black/50 rounded-full text-white transition-all hover:rotate-90">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                             </button>
                         </div>
                     </div>
@@ -165,6 +167,17 @@
                                         <p class="text-[11px] text-white/40 leading-relaxed uppercase tracking-wider font-semibold">Per creator · per campaign · Minimum 3 frames</p>
                                     </div>
                                 </div>
+                                ${isGhaithSaraOnly ? `
+                                <div class="flex items-center gap-5 p-6 glass-card rounded-3xl border border-white/5 hover:border-white/10 transition-all group animate-in slide-in-from-top duration-300">
+                                    <div class="bg-amber-500/10 text-amber-500 rounded-2xl p-3.5 shrink-0 group-hover:bg-amber-500 group-hover:text-black transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-4.418 0-8 3.582-8 8v7c0 1.657 1.343 3 3 3s3-1.343 3-3V11a2 2 0 1 1 4 0v7c0 1.657 1.343 3 3 3s3-1.343 3-3v-7c0-4.418-3.582-8-8-8z"/></svg>
+                                    </div>
+                                    <div class="text-left">
+                                        <p class="font-bold text-white uppercase tracking-wide text-base mb-1">x1 Snapchat Story Set</p>
+                                        <p class="text-[11px] text-white/40 leading-relaxed uppercase tracking-wider font-semibold">@Saraaalwari · per campaign · Minimum 3 frames</p>
+                                    </div>
+                                </div>
+                                ` : ''}
                             </div>
                         </div>
                         <div class="pt-2">
