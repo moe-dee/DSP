@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dubai Safari Park - Influencer Strategic Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #1A1D23;
+            color: #E2E8F0;
+            margin: 0;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .print-card { background: #f9f9f9 !important; border: 1px solid #ddd !important; color: black !important; }
+        }
+        .glass-card {
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .active-tab-glow {
+            box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.2);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-500/30">
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 w-full z-50 bg-[#1A1D23]/95 backdrop-blur-md border-b border-white/5 py-5 flex justify-between items-center px-6 md:px-12 no-print">
+        <div class="flex flex-col text-left">
+            <h1 class="text-lg md:text-xl font-bold tracking-tight text-white leading-none">DUBAI SAFARI PARK</h1>
+            <p class="text-[10px] text-amber-500 font-bold uppercase tracking-[0.4em] mt-1.5 italic">Strategic Hub</p>
+        </div>
+        
+        <button onclick="window.print()" class="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-[#1A1D23] px-5 py-2.5 rounded-xl transition-all text-xs font-bold uppercase tracking-widest active:scale-95 shadow-lg shadow-amber-500/10">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            <span class="hidden sm:inline">Export Strategy</span>
+        </button>
+    </header>
+
+    <main class="pt-28 md:pt-36 px-6 md:px-12 max-w-[1400px] mx-auto pb-20 text-left">
+        <!-- Dashboard Content Container -->
+        <div id="dashboard-root"></div>
+    </main>
+
+    <script>
+        const campaignData = [
+            { id: 'OCT', month: 'OCTOBER 2025', title: 'Opening Campaign / Wild Rules', influencer: 'Diana & Roma - Ghaith & Sara - AfroBySara', tiers: [{ level: 'Tier 1', activity: 'Opening Campaign (14 Oct Launch)', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara' }, { level: 'Tier 2', activity: '1st Midterm SH (13-14)', influencer: 'Internal / PR' }, { level: 'Tier 3', activity: 'Diwali (20)', influencer: 'Organic Content' }], color: 'from-purple-700/40 to-indigo-900/50', accent: 'border-purple-400/20', status: 'Grand Launch' },
+            { id: 'NOV', month: 'NOVEMBER 2025', title: 'Wild Rules & Eid Al Etihad', influencer: 'Ghaith & Sara - AfroBySara', tiers: [{ level: 'Tier 1', activity: 'Opening Campaign Continued', influencer: 'Ghaith & Sara, AfroBySara' }, { level: 'Tier 2', activity: 'Eid Al Etihad (29 Nov-2 Dec)', influencer: 'Ghaith & Sara, AfroBySara' }, { level: 'Tier 3', activity: 'Oman National Day (20-21)', influencer: 'Social Coverage' }], color: 'from-blue-700/40 to-sky-900/50', accent: 'border-blue-400/20', status: 'Active' },
+            { id: 'DEC', month: 'DECEMBER 2025', title: 'Festive Village & Winter Break', influencer: 'Diana & Roma - Ghaith & Sara - AfroBySara', tiers: [{ level: 'Tier 1', activity: 'Festive Village', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara' }, { level: 'Tier 2', activity: 'Winter Break SH (8 Dec-4 Jan)', influencer: 'Diana & Roma Show' }], color: 'from-rose-700/40 to-red-900/50', accent: 'border-rose-400/20', status: 'Festive' },
+            { id: 'JAN', month: 'JANUARY 2026', title: 'Winter Break Wrap-up', influencer: 'Full Talent Team', tiers: [{ level: 'Tier 2', activity: 'Winter Break SH (Ends 4 Jan)', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara' }], color: 'from-emerald-700/40 to-teal-900/50', accent: 'border-emerald-400/20', status: 'Peak' },
+            { id: 'FEB', month: 'FEBRUARY 2026', title: 'Conservation & Midterm', influencer: 'Ghaith & Sara', tiers: [{ level: 'Tier 2', activity: '2nd Midterm SH (9-11)', influencer: 'Internal' }, { level: 'Tier 3', activity: 'Valentine\'s Day (14)', influencer: 'Ghaith & Sara' }], color: 'from-amber-600/40 to-orange-800/50', accent: 'border-amber-400/20', status: 'Educational' },
+            { id: 'MAR', month: 'MARCH 2026', title: 'Wild Swap & Ramadan', influencer: 'Diana & Roma - Ghaith & Sara - AfroBySara', tiers: [{ level: 'Tier 1', activity: 'The Wild Swap: Eid Al Fitr & Springs SH', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara' }, { level: 'Tier 2', activity: 'Springs SH (16-29)', influencer: 'Internal' }], color: 'from-indigo-700/40 to-slate-900/50', accent: 'border-indigo-400/20', status: 'Cultural' },
+            { id: 'APR', month: 'APRIL 2026', title: 'Kids Go Free & Easter', influencer: 'Diana & Roma - Ghaith & Sara - AfroBySara', tiers: [{ level: 'Tier 1', activity: 'Kids Go Free Promotion', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara' }, { level: 'Tier 2', activity: 'Easter Egg Hunt (4-5)', influencer: 'Diana & Roma Show' }], color: 'from-orange-700/40 to-amber-900/50', accent: 'border-orange-400/20', status: 'Spring' },
+            { id: 'MAY', month: 'MAY 2026', title: 'Eid Al Adha & Season Wrap', influencer: 'Diana & Roma - Ghaith & Sara - AfroBySara', tiers: [{ level: 'Tier 1', activity: 'Eid Al Adha / Closing Season (27-31)', influencer: 'Diana & Roma, Ghaith & Sara, AfroBySara' }, { level: 'Tier 2', activity: '3rd Midterm SH (25-26)', influencer: 'Internal' }], color: 'from-zinc-600/40 to-stone-800/50', accent: 'border-zinc-400/20', status: 'Closing' }
+        ];
+
+        let activeTab = 'OCT';
+
+        function render() {
+            const current = campaignData.find(m => m.id === activeTab);
+            const root = document.getElementById('dashboard-root');
+            
+            root.innerHTML = `
+                <!-- Navigation -->
+                <div class="flex gap-2 overflow-x-auto pb-6 mb-10 scrollbar-hide no-print">
+                    ${campaignData.map(m => `
+                        <button onclick="setActiveTab('${m.id}')" class="px-6 py-2.5 rounded-2xl text-[11px] font-bold transition-all uppercase tracking-widest ${activeTab === m.id ? 'bg-amber-500 text-[#1A1D23] active-tab-glow scale-105' : 'bg-white/5 text-slate-500 border border-white/10 hover:border-white/20'}">
+                            ${m.id}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <!-- Main Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+                    <!-- Dashboard Main Card -->
+                    <div class="lg:col-span-8 p-10 md:p-12 rounded-[2.5rem] bg-gradient-to-br ${current.color} border-2 ${current.accent} relative overflow-hidden flex flex-col justify-end shadow-2xl min-h-[480px]">
+                        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-white opacity-[0.03] rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+                        
+                        <div class="relative z-10 text-left">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="h-1 w-8 bg-white/40 rounded-full"></div>
+                                <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-white/60">Strategic Activation Cycle</span>
+                            </div>
+                            <h2 class="text-4xl md:text-6xl font-extrabold mb-10 tracking-tight leading-none uppercase text-white">${current.month}</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${current.tiers.map(t => `
+                                    <div class="flex flex-col gap-3 p-5 glass-card rounded-[1.5rem] border border-white/5 text-left">
+                                        <div class="flex items-center justify-between">
+                                            <div class="px-2 py-0.5 rounded bg-white/10 text-white text-[9px] font-bold uppercase tracking-widest border border-white/10">${t.level}</div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white/20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        </div>
+                                        <div class="text-left">
+                                            <p class="font-bold text-lg leading-snug uppercase tracking-tight text-white mb-1.5">${t.activity}</p>
+                                            <p class="text-[10px] text-white/50 font-semibold uppercase tracking-widest">Target: <span class="text-white/90 font-bold">${t.influencer}</span></p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Side Branding Card -->
+                    <div class="lg:col-span-4 flex flex-col gap-8 text-left">
+                        <div class="flex-1 bg-white/[0.03] border border-white/10 rounded-[3rem] p-10 flex flex-col justify-center shadow-xl">
+                            <span class="text-[11px] font-bold uppercase tracking-[0.4em] text-amber-500/80 mb-6 block">Master Talent Group</span>
+                            <p class="text-3xl md:text-4xl font-extrabold leading-tight text-white mb-10 tracking-tighter uppercase">${current.influencer}</p>
+                            <div class="pt-8 border-t border-white/10 flex items-center gap-4">
+                                <div class="h-3 w-3 rounded-full bg-amber-500 active-tab-glow shadow-[0_0_15px_rgba(245,158,11,0.4)]"></div>
+                                <span class="text-sm font-bold uppercase tracking-widest text-white/60">${current.status} Phase</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-amber-500 text-[#1A1D23] rounded-[2.5rem] p-10 flex items-center justify-between shadow-2xl hover:bg-white transition-all cursor-pointer group">
+                            <div class="text-left">
+                                <span class="text-[#1A1D23]/60 text-[11px] font-bold uppercase tracking-widest block mb-1">Briefing Hub</span>
+                                <span class="text-2xl font-extrabold uppercase tracking-tighter">Deliverables</span>
+                            </div>
+                            <div class="bg-[#1A1D23] h-14 w-14 rounded-full flex items-center justify-center text-amber-500 shadow-lg group-hover:scale-110 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roadmap View -->
+                <div class="flex items-center gap-4 mb-8 px-2 text-left">
+                    <div class="h-px w-10 bg-white/20"></div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-[0.5em] text-slate-500">Season 7 Roadmap</h4>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 no-print text-left">
+                    ${campaignData.map(m => `
+                        <div onclick="setActiveTab('${m.id}')" class="cursor-pointer p-5 rounded-2xl border-2 transition-all ${activeTab === m.id ? 'bg-amber-500 border-amber-500 text-black shadow-lg scale-102' : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10 hover:bg-white/10'}">
+                            <div class="flex flex-col h-full justify-between gap-8 text-left">
+                                <span class="text-[10px] font-bold tracking-widest uppercase ${activeTab === m.id ? 'text-black/60' : 'text-slate-600'}">${m.id}</span>
+                                <h5 class="text-[11px] font-bold leading-tight uppercase ${activeTab === m.id ? 'text-black' : 'text-slate-300'}">${m.title.split('/')[0]}</h5>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function setActiveTab(id) {
+            activeTab = id;
+            render();
+        }
+
+        render();
+    </script>
+
+    <footer class="py-16 border-t border-white/5 px-12 mt-12 text-left">
+        <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="text-left">
+                <p class="text-[10px] font-bold uppercase tracking-[0.5em] text-slate-600 leading-none">DUBAI SAFARI PARK</p>
+                <p class="text-[9px] font-bold text-slate-700 uppercase tracking-widest mt-2">Strategic Influence Hub • Season 7</p>
+            </div>
+            <div class="flex gap-12 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-700">
+                <a href="#" class="hover:text-amber-500 transition-colors">Internal Strategy</a>
+                <a href="#" class="hover:text-amber-500 transition-colors">Confidential</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
